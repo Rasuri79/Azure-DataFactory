@@ -19,6 +19,9 @@
 				},
 				{
 					"name": "filterRows"
+				},
+				{
+					"name": "split1"
 				}
 			],
 			"scriptLines": [
@@ -50,7 +53,9 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> selectCols",
-				"selectCols filter(customer_id!=12) ~> filterRows"
+				"selectCols filter(customer_id!=12) ~> filterRows",
+				"filterRows split(ERROR_FUNCTION(''),",
+				"     disjoint: false) ~> split1@(visa, )"
 			]
 		}
 	}
