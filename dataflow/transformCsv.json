@@ -24,7 +24,7 @@
 					"name": "split1"
 				},
 				{
-					"name": "derivedColumn1"
+					"name": "derivedColumn"
 				}
 			],
 			"scriptLines": [
@@ -61,7 +61,7 @@
 				"     payment=='mastercard',",
 				"     payment=='americanexpress',",
 				"     disjoint: false) ~> split1@(visa, mastercard, amex)",
-				"split1@amex derive() ~> derivedColumn1"
+				"split1@amex derive(payment = coalesce(payment,'N/A')) ~> derivedColumn"
 			]
 		}
 	}
