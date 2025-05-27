@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"p": {
+			"p_file_name": {
 				"type": "string"
 			}
 		},
@@ -15,6 +15,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().p_file_name",
+					"type": "Expression"
+				},
 				"folderPath": "csvFiles",
 				"fileSystem": "reporting"
 			},
