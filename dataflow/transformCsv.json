@@ -12,7 +12,11 @@
 					"name": "sourceCsv"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink"
+				}
+			],
 			"transformations": [
 				{
 					"name": "selectCols"
@@ -66,7 +70,11 @@
 				"     disjoint: true) ~> split@(visa, mastercard, amex)",
 				"split@amex derive(payment = coalesce(payment,'N/A')) ~> derivedColumn",
 				"split@visa aggregate(groupBy(customer_id),",
-				"     product_id = max(product_id)) ~> aggregate"
+				"     product_id = max(product_id)) ~> aggregate",
+				"aggregate sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink"
 			]
 		}
 	}
