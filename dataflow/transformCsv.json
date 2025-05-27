@@ -65,7 +65,8 @@
 				"     payment=='americanexpress',",
 				"     disjoint: true) ~> split@(visa, mastercard, amex)",
 				"split@amex derive(payment = coalesce(payment,'N/A')) ~> derivedColumn",
-				"split@visa aggregate(groupBy(customer_id)) ~> aggregate"
+				"split@visa aggregate(groupBy(customer_id),",
+				"     product_id = max(product_id)) ~> aggregate"
 			]
 		}
 	}
