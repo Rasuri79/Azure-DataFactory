@@ -55,7 +55,9 @@
 				"     skipDuplicateMapOutputs: true) ~> selectCols",
 				"selectCols filter(customer_id!=12) ~> filterRows",
 				"filterRows split(payment=='visa',",
-				"     disjoint: false) ~> split1@(visa, otherthanvisa)"
+				"     payment=='mastercard',",
+				"     ERROR_FUNCTION(''),",
+				"     disjoint: false) ~> split1@(visa, mastercard, , otherthanvisa)"
 			]
 		}
 	}
