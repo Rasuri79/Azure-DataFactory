@@ -21,7 +21,7 @@
 					"name": "filterRows"
 				},
 				{
-					"name": "split1"
+					"name": "split"
 				},
 				{
 					"name": "derivedColumn"
@@ -60,8 +60,8 @@
 				"filterRows split(payment=='visa',",
 				"     payment=='mastercard',",
 				"     payment=='americanexpress',",
-				"     disjoint: false) ~> split1@(visa, mastercard, amex)",
-				"split1@amex derive(payment = coalesce(payment,'N/A')) ~> derivedColumn"
+				"     disjoint: true) ~> split@(visa, mastercard, amex)",
+				"split@amex derive(payment = coalesce(payment,'N/A')) ~> derivedColumn"
 			]
 		}
 	}
