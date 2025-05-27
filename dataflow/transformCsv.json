@@ -15,7 +15,10 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "select1"
+					"name": "selectCols"
+				},
+				{
+					"name": "filterRows"
 				}
 			],
 			"scriptLines": [
@@ -46,7 +49,8 @@
 				"          price",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> selectCols",
+				"selectCols filter(ERROR_FUNCTION('')) ~> filterRows"
 			]
 		}
 	}
