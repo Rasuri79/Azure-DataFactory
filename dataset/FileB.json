@@ -1,0 +1,20 @@
+{
+	"name": "FileB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Compare2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Fact_Sales_1 - Copy.xlsx",
+				"folderPath": "csvfiles",
+				"fileSystem": "source"
+			}
+		},
+		"schema": []
+	}
+}
