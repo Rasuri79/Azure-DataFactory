@@ -23,20 +23,52 @@
 			"transformations": [
 				{
 					"name": "FullJoin"
+				},
+				{
+					"name": "FindMismatchRecords"
+				},
+				{
+					"name": "EqualRecords"
 				}
 			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          transaction_id as string,",
+				"          transactional_date as string,",
+				"          product_id as string,",
+				"          customer_id as string,",
+				"          payment as string,",
+				"          credit_card as string,",
+				"          loyalty_card as string,",
+				"          cost as string,",
+				"          quantity as string,",
+				"          price as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          transaction_id as string,",
+				"          transactional_date as string,",
+				"          product_id as string,",
+				"          customer_id as string,",
+				"          payment as string,",
+				"          credit_card as string,",
+				"          loyalty_card as string,",
+				"          cost as string,",
+				"          quantity as string,",
+				"          price as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source2",
-				"source1, source2 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
-				"     joinType:'inner',",
+				"source1, source2 join(source1@transaction_id == source2@transaction_id,",
+				"     joinType:'outer',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> FullJoin"
+				"     broadcast: 'auto')~> FullJoin",
+				"FullJoin derive(transaction_id = source1@transaction_id==source2@transaction_id) ~> FindMismatchRecords",
+				"FindMismatchRecords filter(ERROR_FUNCTION('')) ~> EqualRecords"
 			]
 		}
 	}
