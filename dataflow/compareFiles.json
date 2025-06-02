@@ -25,6 +25,13 @@
 						"referenceName": "EqualRecordsCsv",
 						"type": "DatasetReference"
 					},
+					"name": "EqualSink"
+				},
+				{
+					"dataset": {
+						"referenceName": "FileBRecords",
+						"type": "DatasetReference"
+					},
 					"name": "FileBsink"
 				},
 				{
@@ -33,13 +40,6 @@
 						"type": "DatasetReference"
 					},
 					"name": "FileAsink"
-				},
-				{
-					"dataset": {
-						"referenceName": "FileBRecords",
-						"type": "DatasetReference"
-					},
-					"name": "EqualSink"
 				}
 			],
 			"transformations": [
@@ -57,6 +57,12 @@
 				},
 				{
 					"name": "EqualRecord"
+				},
+				{
+					"name": "selectB"
+				},
+				{
+					"name": "selectA"
 				}
 			],
 			"scriptLines": [
@@ -103,24 +109,34 @@
 				"FindMismatchRecords filter(!isNull(transaction_id_fileA) &&",
 				"!isNull(transaction_id_fileB)",
 				") ~> EqualRecord",
-				"FileBrecords sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     partitionFileNames:['equalrecords.csv'],",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
+				"FileBrecords select(mapColumn(",
+				"          transactional_date = source2@transactional_date,",
+				"          product_id = source2@product_id,",
+				"          customer_id = source2@customer_id,",
+				"          payment = source2@payment,",
+				"          credit_card = source2@credit_card,",
+				"          loyalty_card = source2@loyalty_card,",
+				"          cost = source2@cost,",
+				"          quantity = source2@quantity,",
+				"          price = source2@price,",
+				"          transaction_id_fileB",
+				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> FileBsink",
-				"FileArecords sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     partitionFileNames:['fileA_only.csv'],",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
+				"     skipDuplicateMapOutputs: true) ~> selectB",
+				"FileArecords select(mapColumn(",
+				"          transactional_date = source1@transactional_date,",
+				"          product_id = source1@product_id,",
+				"          customer_id = source1@customer_id,",
+				"          payment = source1@payment,",
+				"          credit_card = source1@credit_card,",
+				"          loyalty_card = source1@loyalty_card,",
+				"          cost = source1@cost,",
+				"          quantity = source1@quantity,",
+				"          price = source1@price,",
+				"          transaction_id_fileA",
+				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> FileAsink",
+				"     skipDuplicateMapOutputs: true) ~> selectA",
 				"EqualRecord sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['fileB_only.csv'],",
@@ -129,7 +145,21 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> EqualSink"
+				"     partitionBy('hash', 1)) ~> EqualSink",
+				"selectB sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> FileBsink",
+				"selectA sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> FileAsink"
 			]
 		}
 	}
