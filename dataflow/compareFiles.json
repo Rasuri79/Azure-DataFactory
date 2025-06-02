@@ -139,7 +139,7 @@
 				"     skipDuplicateMapOutputs: true) ~> selectA",
 				"EqualRecord sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['fileB_only.csv'],",
+				"     partitionFileNames:['Equalrecords.csv'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
@@ -148,18 +148,22 @@
 				"     partitionBy('hash', 1)) ~> EqualSink",
 				"selectB sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     partitionFileNames:['FileaB_only.csv'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> FileBsink",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> FileBsink",
 				"selectA sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     partitionFileNames:['FileA_only.csv'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> FileAsink"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> FileAsink"
 			]
 		}
 	}
