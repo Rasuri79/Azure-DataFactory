@@ -148,7 +148,7 @@
 				"     partitionBy('hash', 1)) ~> EqualSink",
 				"selectB sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['FileaB_only.csv'],",
+				"     partitionFileNames:['FileB_only.csv'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
