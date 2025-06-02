@@ -25,21 +25,21 @@
 						"referenceName": "EqualRecordsCsv",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "FileBsink"
 				},
 				{
 					"dataset": {
 						"referenceName": "FileArecords",
 						"type": "DatasetReference"
 					},
-					"name": "sink2"
+					"name": "FileAsink"
 				},
 				{
 					"dataset": {
 						"referenceName": "FileBRecords",
 						"type": "DatasetReference"
 					},
-					"name": "sink3"
+					"name": "EqualSink"
 				}
 			],
 			"transformations": [
@@ -111,7 +111,7 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink1",
+				"     partitionBy('hash', 1)) ~> FileBsink",
 				"FileArecords sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['fileA_only.csv'],",
@@ -120,7 +120,7 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink2",
+				"     partitionBy('hash', 1)) ~> FileAsink",
 				"EqualRecord sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['fileB_only.csv'],",
@@ -129,7 +129,7 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink3"
+				"     partitionBy('hash', 1)) ~> EqualSink"
 			]
 		}
 	}
