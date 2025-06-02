@@ -381,13 +381,13 @@
 							"name": "FindMismatchRecords"
 						},
 						{
-							"name": "EqualRecords"
+							"name": "FileBrecords"
 						},
 						{
 							"name": "FileArecords"
 						},
 						{
-							"name": "FileBrecords"
+							"name": "EqualRecord"
 						}
 					],
 					"scriptLines": [
@@ -429,32 +429,38 @@
 						"FullJoin derive(transaction_id = source1@transaction_id==source2@transaction_id,",
 						"          transaction_id_fileA = source1@transaction_id,",
 						"          transaction_id_fileB = source2@transaction_id) ~> FindMismatchRecords",
-						"FileArecords filter(!isNull(transaction_id_fileA) &&",
+						"EqualRecord filter(isNull(transaction_id_fileA) && !isNull(transaction_id_fileB)) ~> FileBrecords",
+						"EqualRecord filter(!isNull(transaction_id_fileA) && isNull(transaction_id_fileB)) ~> FileArecords",
+						"FindMismatchRecords filter(!isNull(transaction_id_fileA) &&",
 						"!isNull(transaction_id_fileB) &&",
-						"transaction_id_fileA == transaction_id_fileB) ~> EqualRecords",
-						"FileBrecords filter(!isNull(transaction_id_fileA) && isNull(transaction_id_fileB)) ~> FileArecords",
-						"FindMismatchRecords filter(isNull(transaction_id_fileA) && !isNull(transaction_id_fileB)) ~> FileBrecords",
-						"EqualRecords sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink1",
-						"FileArecords sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink2",
+						"transaction_id_fileA == transaction_id_fileB) ~> EqualRecord",
 						"FileBrecords sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
+						"     partitionFileNames:['equalrecords.csv'],",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> sink3"
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1",
+						"FileArecords sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['fileA_only.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink2",
+						"EqualRecord sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['fileB_only.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink3"
 					]
 				}
 			},
