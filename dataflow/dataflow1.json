@@ -68,10 +68,10 @@
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> FullJoin",
 				"FullJoin derive(transaction_id = source1@transaction_id==source2@transaction_id,",
-				"          column1 = ERROR_FUNCTION('')) ~> FindMismatchRecords",
+				"          transaction_id_fileA = source1@transaction_id,",
+				"          transaction_id_fileB = source2@transaction_id) ~> FindMismatchRecords",
 				"FindMismatchRecords filter(!isNull(source1@transaction_id) &&\r",
-				"!isNull(source2@transaction_id)\r",
-				") ~> EqualRecords"
+				"!isNull(source2@transaction_id)) ~> EqualRecords"
 			]
 		}
 	}
