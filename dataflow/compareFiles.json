@@ -56,7 +56,7 @@
 					"name": "FileArecords"
 				},
 				{
-					"name": "EqualRecords"
+					"name": "EqualRecord"
 				}
 			],
 			"scriptLines": [
@@ -98,11 +98,11 @@
 				"FullJoin derive(transaction_id = source1@transaction_id==source2@transaction_id,",
 				"          transaction_id_fileA = source1@transaction_id,",
 				"          transaction_id_fileB = source2@transaction_id) ~> FindMismatchRecords",
-				"EqualRecords filter(isNull(transaction_id_fileA) && !isNull(transaction_id_fileB)) ~> FileBrecords",
-				"EqualRecords filter(!isNull(transaction_id_fileA) && isNull(transaction_id_fileB)) ~> FileArecords",
+				"EqualRecord filter(isNull(transaction_id_fileA) && !isNull(transaction_id_fileB)) ~> FileBrecords",
+				"EqualRecord filter(!isNull(transaction_id_fileA) && isNull(transaction_id_fileB)) ~> FileArecords",
 				"FindMismatchRecords filter(!isNull(transaction_id_fileA) &&",
 				"!isNull(transaction_id_fileB) &&",
-				"transaction_id_fileA == transaction_id_fileB) ~> EqualRecords",
+				"transaction_id_fileA == transaction_id_fileB) ~> EqualRecord",
 				"FileBrecords sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['equalrecords.csv'],",
@@ -121,7 +121,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> sink2",
-				"EqualRecords sink(allowSchemaDrift: true,",
+				"EqualRecord sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['fileB_only.csv'],",
 				"     umask: 0022,",
