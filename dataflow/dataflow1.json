@@ -19,7 +19,29 @@
 					"name": "source2"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "EqualRecordsCsv",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "FileArecords",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				},
+				{
+					"dataset": {
+						"referenceName": "FileBRecords",
+						"type": "DatasetReference"
+					},
+					"name": "sink3"
+				}
+			],
 			"transformations": [
 				{
 					"name": "FullJoin"
@@ -29,6 +51,12 @@
 				},
 				{
 					"name": "EqualRecords"
+				},
+				{
+					"name": "FileArecords"
+				},
+				{
+					"name": "FileBrecords"
 				}
 			],
 			"scriptLines": [
@@ -70,8 +98,36 @@
 				"FullJoin derive(transaction_id = source1@transaction_id==source2@transaction_id,",
 				"          transaction_id_fileA = source1@transaction_id,",
 				"          transaction_id_fileB = source2@transaction_id) ~> FindMismatchRecords",
-				"FindMismatchRecords filter(!isNull(source1@transaction_id) &&\r",
-				"!isNull(source2@transaction_id)) ~> EqualRecords"
+				"FileArecords filter(!isNull(transaction_id_fileA) &&",
+				"!isNull(transaction_id_fileB) &&",
+				"transaction_id_fileA == transaction_id_fileB",
+				"",
+				") ~> EqualRecords",
+				"FileBrecords filter(!isNull(transaction_id_fileA) && isNull(transaction_id_fileB)",
+				") ~> FileArecords",
+				"FindMismatchRecords filter(isNull(transaction_id_fileA) && !isNull(transaction_id_fileB)",
+				") ~> FileBrecords",
+				"EqualRecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1",
+				"FileArecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2",
+				"FileBrecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink3"
 			]
 		}
 	}
