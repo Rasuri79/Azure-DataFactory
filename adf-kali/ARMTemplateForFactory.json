@@ -7,9 +7,25 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-kali"
 		},
+		"Compare1_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'Compare1'"
+		},
+		"Compare2_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'Compare2'"
+		},
 		"Kalilake_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'Kalilake'"
+		},
+		"Compare1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://lalithaadfcourse.dfs.core.windows.net/"
+		},
+		"Compare2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://lalithaadfcourse.dfs.core.windows.net/"
 		},
 		"HttpServer1_properties_typeProperties_url": {
 			"type": "string",
@@ -492,6 +508,146 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/CsvFileA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Compare1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Fact_Sales.csv",
+						"folderPath": "csvfiles",
+						"fileSystem": "source"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "transaction_id",
+						"type": "String"
+					},
+					{
+						"name": "transactional_date",
+						"type": "String"
+					},
+					{
+						"name": "product_id",
+						"type": "String"
+					},
+					{
+						"name": "customer_id",
+						"type": "String"
+					},
+					{
+						"name": "payment",
+						"type": "String"
+					},
+					{
+						"name": "credit_card",
+						"type": "String"
+					},
+					{
+						"name": "loyalty_card",
+						"type": "String"
+					},
+					{
+						"name": "cost",
+						"type": "String"
+					},
+					{
+						"name": "quantity",
+						"type": "String"
+					},
+					{
+						"name": "price",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Compare1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CsvFileB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Compare2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Fact_Sales_1 - Copy.csv",
+						"folderPath": "csvfiles",
+						"fileSystem": "source"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "transaction_id",
+						"type": "String"
+					},
+					{
+						"name": "transactional_date",
+						"type": "String"
+					},
+					{
+						"name": "product_id",
+						"type": "String"
+					},
+					{
+						"name": "customer_id",
+						"type": "String"
+					},
+					{
+						"name": "payment",
+						"type": "String"
+					},
+					{
+						"name": "credit_card",
+						"type": "String"
+					},
+					{
+						"name": "loyalty_card",
+						"type": "String"
+					},
+					{
+						"name": "cost",
+						"type": "String"
+					},
+					{
+						"name": "quantity",
+						"type": "String"
+					},
+					{
+						"name": "price",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Compare2')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -602,6 +758,58 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/Kalilake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileA')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Compare1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Fact_Sales_1",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Fact_Sales.xlsx",
+						"folderPath": "csvfiles",
+						"fileSystem": "source"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Compare1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Compare2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Fact_Sales_1",
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "Fact_Sales_1 - Copy.xlsx",
+						"folderPath": "csvfiles",
+						"fileSystem": "source"
+					}
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Compare2')]"
 			]
 		},
 		{
@@ -846,6 +1054,40 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Compare1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('Compare1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('Compare1_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Compare2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('Compare2_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('Compare2_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/HttpServer1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -876,6 +1118,209 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger1')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Dataflowpipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15,
+						"startTime": "2025-06-02T14:15:00",
+						"timeZone": "India Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Dataflowpipeline')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger2')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "OnlySelectedFiles",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15,
+						"startTime": "2025-06-02T14:15:00",
+						"timeZone": "India Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/OnlySelectedFiles')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "CsvFileA",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "CsvFileB",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "EqualRecordsCsv",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "FileArecords",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						},
+						{
+							"dataset": {
+								"referenceName": "FileBRecords",
+								"type": "DatasetReference"
+							},
+							"name": "sink3"
+						}
+					],
+					"transformations": [
+						{
+							"name": "FullJoin"
+						},
+						{
+							"name": "FindMismatchRecords"
+						},
+						{
+							"name": "EqualRecords"
+						},
+						{
+							"name": "FileArecords"
+						},
+						{
+							"name": "FileBrecords"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          transaction_id as string,",
+						"          transactional_date as string,",
+						"          product_id as string,",
+						"          customer_id as string,",
+						"          payment as string,",
+						"          credit_card as string,",
+						"          loyalty_card as string,",
+						"          cost as string,",
+						"          quantity as string,",
+						"          price as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source(output(",
+						"          transaction_id as string,",
+						"          transactional_date as string,",
+						"          product_id as string,",
+						"          customer_id as string,",
+						"          payment as string,",
+						"          credit_card as string,",
+						"          loyalty_card as string,",
+						"          cost as string,",
+						"          quantity as string,",
+						"          price as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source2",
+						"source1, source2 join(source1@transaction_id == source2@transaction_id,",
+						"     joinType:'outer',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> FullJoin",
+						"FullJoin derive(transaction_id = source1@transaction_id==source2@transaction_id,",
+						"          transaction_id_fileA = source1@transaction_id,",
+						"          transaction_id_fileB = source2@transaction_id) ~> FindMismatchRecords",
+						"FileArecords filter(!isNull(transaction_id_fileA) &&",
+						"!isNull(transaction_id_fileB) &&",
+						"transaction_id_fileA == transaction_id_fileB",
+						"",
+						") ~> EqualRecords",
+						"FileBrecords filter(!isNull(transaction_id_fileA) && isNull(transaction_id_fileB)",
+						") ~> FileArecords",
+						"FindMismatchRecords filter(isNull(transaction_id_fileA) && !isNull(transaction_id_fileB)",
+						") ~> FileBrecords",
+						"EqualRecords sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink1",
+						"FileArecords sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink2",
+						"FileBrecords sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> sink3"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/CsvFileA')]",
+				"[concat(variables('factoryId'), '/datasets/CsvFileB')]",
+				"[concat(variables('factoryId'), '/datasets/EqualRecordsCsv')]",
+				"[concat(variables('factoryId'), '/datasets/FileArecords')]",
+				"[concat(variables('factoryId'), '/datasets/FileBRecords')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/transformCsv')]",
@@ -1052,6 +1497,93 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/dataflowsource')]",
 				"[concat(variables('factoryId'), '/datasets/aggreateData')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/EqualRecordsCsv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Kalilake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "EqualRecords",
+						"folderPath": "Compare",
+						"fileSystem": "destination"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Kalilake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileArecords')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Kalilake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "FileARecords",
+						"folderPath": "Compare",
+						"fileSystem": "destination"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Kalilake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileBRecords')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Kalilake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "FileB",
+						"folderPath": "Compare",
+						"fileSystem": "destination"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Kalilake')]"
 			]
 		}
 	]

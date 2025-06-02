@@ -5,8 +5,20 @@
 		"factoryName": {
 			"value": "adf-kali"
 		},
+		"Compare1_accountKey": {
+			"value": ""
+		},
+		"Compare2_accountKey": {
+			"value": ""
+		},
 		"Kalilake_accountKey": {
 			"value": ""
+		},
+		"Compare1_properties_typeProperties_url": {
+			"value": "https://lalithaadfcourse.dfs.core.windows.net/"
+		},
+		"Compare2_properties_typeProperties_url": {
+			"value": "https://lalithaadfcourse.dfs.core.windows.net/"
 		},
 		"HttpServer1_properties_typeProperties_url": {
 			"value": "https://github.com"
